@@ -1,0 +1,156 @@
+{
+  "info": {
+    "_postman_id": "c1b42a32-d82f-44aa-a35e-0b133ddcced7",
+    "name": "Patient Service - Buoi thuc hanh 1",
+    "description": "Smoke tests for Patient Service CRUD, validation, error handling, and name search.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "patientId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Hello",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients/hello"
+      }
+    },
+    {
+      "name": "Info",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients/info"
+      }
+    },
+    {
+      "name": "List patients",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients"
+      }
+    },
+    {
+      "name": "Create patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Created with 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.collectionVariables.set('patientId', pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Nguyen Van An\",\n  \"dateOfBirth\": \"2003-05-12\",\n  \"gender\": \"Male\",\n  \"phone\": \"0901234567\",\n  \"address\": \"Ha Noi\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/patients"
+      }
+    },
+    {
+      "name": "Get created patient",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients/{{patientId}}"
+      }
+    },
+    {
+      "name": "Search patients",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients/search?name=An"
+      }
+    },
+    {
+      "name": "Update patient",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Nguyen Van An Updated\",\n  \"dateOfBirth\": \"2003-05-12\",\n  \"gender\": \"Male\",\n  \"phone\": \"0901234567\",\n  \"address\": \"Ha Noi\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/patients/{{patientId}}"
+      }
+    },
+    {
+      "name": "Reject invalid patient",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"\",\n  \"phone\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/patients"
+      }
+    },
+    {
+      "name": "Return 404 for missing patient",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/patients/999999"
+      }
+    },
+    {
+      "name": "Delete created patient",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/patients/{{patientId}}"
+      }
+    },
+    {
+      "name": "Return 404 when deleting missing patient",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/patients/999999"
+      }
+    }
+  ]
+}
